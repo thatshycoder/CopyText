@@ -1,12 +1,12 @@
-import express from "express";
+import express, { Application } from "express";
 import { Server as SocketIOServer } from "socket.io";
 import { createServer, Server as HTTPServer } from "http";
 import path from "path";
 
 export default class Server {
 	private httpServer: HTTPServer;
-	private app;
-	private io;
+	private app: Application;
+	private io: SocketIOServer;
 	private activeSockets: string[] = [];
 	private readonly DEFAULT_PORT = 3000;
 

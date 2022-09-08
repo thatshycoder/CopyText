@@ -6,7 +6,7 @@ import path from "path";
 export default class Server {
 	private httpServer: HTTPServer;
 	private app;
-	private io: SocketIOServer;
+	private io;
 	private activeSockets: string[] = [];
 	private readonly DEFAULT_PORT = 3000;
 
@@ -51,6 +51,10 @@ export default class Server {
 				});
 			});
 		});
+
+		this.io.on("connect_error", (err) => {
+			console.log(`Socket connect_error due to ${err.message}`);
+		});
 	}
 
 	private configureApp(): void {
@@ -64,7 +68,6 @@ export default class Server {
 	}
 
 	public listen(callback: (port: number) => void): void {
-
 		this.httpServer.listen(this.DEFAULT_PORT, () =>
 			callback(this.DEFAULT_PORT)
 		);

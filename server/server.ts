@@ -18,9 +18,11 @@ export default class Server {
 		this.configureApp();
 		this.handleRoute();
 		this.handleSocketConnection();
+		this.handleSocketDisconnection();
 	}
 
 	private handleSocketConnection(): void {
+		// handle socket connection
 		this.io.on("connection", (socket) => {
 			console.log("Socket connected");
 
@@ -31,29 +33,38 @@ export default class Server {
 			if (!existingSocket) {
 				this.activeSockets.push(socket.id);
 
-				socket.emit("update-user-list", {
-					users: this.activeSockets.filter(
+				socket.emit("update-devices-list", {
+					devices: this.activeSockets.filter(
 						(existingSocket) => existingSocket !== socket.id
 					),
 				});
 
-				socket.broadcast.emit("update-user-list", {
-					users: [socket.id],
+				socket.broadcast.emit("update-devices-list", {
+					devices: [socket.id],
 				});
 			}
 
-			socket.on("disconnect", () => {
-				this.activeSockets = this.activeSockets.filter(
-					(existingSocket) => existingSocket !== socket.id
-				);
-				socket.broadcast.emit("remove-user", {
-					socketId: socket.id,
-				});
+			// handle message
+			socket.on("send-message", (message) => {
+				message = socket.id + ": " + message;
+				this.io.emit("sent-message", message);
 			});
 		});
 
+		// log socket connection error
 		this.io.on("connect_error", (err) => {
 			console.log(`Socket connect_error due to ${err.message}`);
+		});
+	}
+
+	private handleSocketDisconnection(): void {
+		this.io.on("disconnect", (socket) => {
+			this.activeSockets = this.activeSockets.filter(
+				(existingSocket) => existingSocket !== socket.id
+			);
+			socket.broadcast.emit("removed-device", {
+				socketId: socket.id,
+			});
 		});
 	}
 

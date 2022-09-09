@@ -26,7 +26,7 @@
 		</style>
 	</head>
 	<body>
-		<div class="container mt-5 text-center">
+		<div class="container mt-5 text-center" id="app">
 			<div class="mb-5">
 				<h2>TextDrop</h2>
 				<p>Copy/Paste text accross multiple devices</p>
@@ -39,18 +39,20 @@
 					<i class="fa fa-user-circle fa-5x text-default"></i>
 					<h3 id="deviceName" class="mb-3"><strong>sdk33</strong></h3>
 					<button class="btn btn-dark">Paste</button>
-					<button class="btn btn-primary">Copy</button>
+					<button class="btn btn-primary" id="sendMessage">Copy</button>
 				</div>
 				<div class="mt-5">
 					<hr />
 					<div>
-						<p class="text-danger">You are known as</p>
+						<p class="text-danger">You are known as {{ display }}</p>
 					</div>
 					<h5 id="deviceName"><strong>rfr3</strong></h5>
 				</div>
 			</div>
 		</div>
-		<script src="./scripts/index.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="https://unpkg.com/vuex"></script>
+		<script src="./scripts/index.js" type="module"></script>
 	</body>
 </html>
 

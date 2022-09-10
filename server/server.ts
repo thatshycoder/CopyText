@@ -1,7 +1,8 @@
 import express, { Application } from "express";
-import { Server as SocketIOServer } from "socket.io";
+import { Server as SocketIOServer, Socket } from "socket.io";
 import { createServer, Server as HTTPServer } from "http";
 import path from "path";
+import { generateUsername } from "unique-username-generator";
 
 export default class Server {
 	private httpServer: HTTPServer;
@@ -16,42 +17,51 @@ export default class Server {
 		this.io = new SocketIOServer(this.httpServer);
 
 		this.configureApp();
-		this.handleRoute();
 		this.handleSocketConnection();
 		this.handleSocketDisconnection();
 	}
 
 	private handleSocketConnection(): void {
-		// handle socket connection
+		this.handleSocketConnectionError();
+
 		this.io.on("connection", (socket) => {
 			console.log("Socket connected");
 
-			const existingSocket = this.activeSockets.find(
-				(existingSocket) => existingSocket === socket.id
-			);
-
-			if (!existingSocket) {
-				this.activeSockets.push(socket.id);
-
-				socket.emit("update-devices-list", {
-					devices: this.activeSockets.filter(
-						(existingSocket) => existingSocket !== socket.id
-					),
-				});
-
-				socket.broadcast.emit("update-devices-list", {
-					devices: [socket.id],
-				});
-			}
-
-			// handle message
-			socket.on("send-message", (message) => {
-				message = socket.id + ": " + message;
-				this.io.emit("sent-message", message);
-			});
+			this.handleDeviceConnection(socket);
+			this.handleMessage(socket);
 		});
+	}
 
-		// log socket connection error
+	private handleMessage(socket: Socket): void {
+		socket.on("send-message", (message) => {
+			this.io.emit("sent-message", message);
+		});
+	}
+
+	private handleDeviceConnection(socket: Socket): void {
+		//
+		const deviceUsername = generateUsername();
+
+		const existingSocket = this.activeSockets.find(
+			(existingSocket) => existingSocket === deviceUsername
+		);
+
+		if (!existingSocket) {
+			this.activeSockets.push(deviceUsername);
+
+			socket.emit("update-devices-list", {
+				devices: this.activeSockets.filter(
+					(existingSocket) => existingSocket !== deviceUsername
+				),
+			});
+
+			socket.broadcast.emit("update-devices-list", {
+				devices: deviceUsername,
+			});
+		}
+	}
+
+	private handleSocketConnectionError(): void {
 		this.io.on("connect_error", (err) => {
 			console.log(`Socket connect_error due to ${err.message}`);
 		});
@@ -70,12 +80,6 @@ export default class Server {
 
 	private configureApp(): void {
 		this.app.use(express.static(path.join(__dirname, "../public")));
-	}
-
-	private handleRoute(): void {
-		this.app.get("/", (req, res) => {
-			res.send(`<h2>Server Running..</h2>`);
-		});
 	}
 
 	public listen(callback: (port: number) => void): void {

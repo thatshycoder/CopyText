@@ -6,7 +6,8 @@ const App = {
 
 	data: {
 		display: "uus33",
-		connectedDevices: ["one"],
+		// ensure to show only devices on the same network
+		connectedDevices: [],
 	},
 
 	methods: {

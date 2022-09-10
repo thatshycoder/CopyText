@@ -40,7 +40,7 @@ export default class Server {
 
 	private handleDeviceConnection(socket: Socket): void {
 		//
-		const deviceUsername = generateUsername();
+		const deviceUsername = generateUsername("", 0, 4);
 
 		const existingSocket = this.activeSockets.find(
 			(existingSocket) => existingSocket === deviceUsername

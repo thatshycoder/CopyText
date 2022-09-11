@@ -28,40 +28,43 @@
 				<p>Copy/Paste text accross multiple devices</p>
 			</div>
 			<div class="text-center">
-				<div v-if="connectedDevices.length > 0">
+				<div v-if="getAllDevices().length > 0">
 					<p class="mb-5 text-danger">
 						<strong>Active Devices</strong>
 					</p>
 					<div class="row">
 						<div
-							class="col-2 mb-3"
-							v-for="(device, key) in connectedDevices"
+							class="col-6 col-md-2 mb-3"
+							v-for="(device, key) in getAllDevices()"
 							:key="key"
 						>
 							<div class="deviceInfo">
 								<i class="fa fa-user-circle fa-5x text-default"></i>
 								<h3 id="deviceName" class="mb-3">
-									<strong>{{ device }}</strong>
+									<strong>{{ device.username }}</strong>
 								</h3>
-								<button class="btn btn-dark" @click="handlePasteBtn(device)">
+								<button
+									class="btn btn-dark"
+									@click="handlePasteBtn(device.username)"
+								>
 									Paste here
 								</button>
-								<button class="btn btn-primary" @click="handleCopyBtn(device)">
-									Copy
-								</button>
+								<div>
+									<textarea class="form-control" id="clipboard-content">
+									</textarea
+									>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div v-else>
-					Searching for devices...
-				</div>
+				<div v-else>Searching for devices...</div>
 				<div class="mt-5">
 					<hr />
 					<div>
 						<p>
 							<span class="text-danger">You are known as </span>
-							<span class="text-default">{{ display }}</span>
+							<span class="text-default">{{ connectedDevice }}</span>
 						</p>
 					</div>
 				</div>

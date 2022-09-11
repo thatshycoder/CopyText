@@ -5,54 +5,67 @@ const App = {
 	el: "#app",
 
 	data: {
-		display: "uus33",
 		// ensure to show only devices on the same network
+		connectedDevice: "",
 		connectedDevices: [],
 		devicesClipboard: {},
+		copiedContent: "",
 	},
 
 	methods: {
 		handlePasteBtn(device) {
 			// copy device clipboard content
 			navigator.clipboard.readText().then((text) => {
-				this.devicesClipboard[device] = {
-					authorizedDevices: [],
-					clipboardContent: text,
-				};
-
-				console.log(JSON.stringify(this.devicesClipboard));
+				this.sendClipboardContentToServer(device, text);
 			});
 		},
 
-		handleCopyBtn(device) {
-			// check if device is part of devices authorized to copy content
+		sendClipboardContentToServer(device, content) {
+			socket.emit("save-clipboard-content", {
+				owner: this.connectedDevice,
+				device: device,
+				content: content,
+			});
 		},
 
-		//handle new device connection
 		updateConnectedDevicesList(devices) {
 			this.connectedDevices = devices;
 		},
 
-		sendMessage() {
-			const message = document.getElementById("message");
+		getAllDevices() {
+			const devices = this.connectedDevices.filter(
+				(device) => device.username !== this.connectedDevice
+			);
 
-			// if (message.value) {
-			// 	socket.emit("send-message", message.value);
-			// }
-
-			// message.value = "";
-		},
-
-		updateMessage(message) {
-			const messages = document.getElementById("messagesList");
-			//messages.innerText = `${messages.innerText}  \n  ${message}`;
+			return devices;
 		},
 	},
 
 	mounted() {
 		socket.on("update-devices-list", (socket) => {
 			console.log("New device connected");
-			this.updateConnectedDevicesList(socket.devices);
+			this.updateConnectedDevicesList(socket.activeDevices);
+		});
+
+		socket.on("connected", (socket) => {
+			this.connectedDevice = this.connectedDevices.filter(
+				(device) => device.id === socket.id
+			)[0].username;
+		});
+
+		socket.on("saved-clipboard-content", (socket) => {
+			// TODO: Add support for multiple devices
+			this.devicesClipboard[socket.owner] = {
+				authorizedDevice: socket.device,
+				clipboardContent: socket.content,
+			};
+
+			if (this.connectedDevice == socket.device) {
+				const el = document.getElementById("clipboard-content");
+				el.value = socket.content;
+			}
+
+			//this.copiedContent = socket.content;
 		});
 
 		socket.on("removed-device", (socket) => {

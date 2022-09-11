@@ -8,7 +8,7 @@ export default class Server {
 	private httpServer: HTTPServer;
 	private app: Application;
 	private io: SocketIOServer;
-	private activeSockets: string[] = [];
+	private activeDevices: any[] = [];
 	private readonly DEFAULT_PORT = 3000;
 
 	constructor() {
@@ -27,7 +27,7 @@ export default class Server {
 			console.log("Socket connected");
 
 			this.handleDeviceConnection(socket);
-			this.handleMessage(socket);
+			this.handleReceiveClipboardContent(socket);
 			this.handleSocketDisconnection(socket);
 		});
 	}
@@ -36,46 +36,62 @@ export default class Server {
 		socket.on("disconnect", () => {
 			console.log("socket disconnected");
 
-			this.activeSockets = this.activeSockets.filter(
-				(existingSocket) => existingSocket !== socket.id
+			this.activeDevices = this.activeDevices.filter(
+				(existingDevice) => existingDevice.id !== socket.id
 			);
 
 			// TODO: Ensure disconnection is done properly
 			socket.emit("removed-device", {
-				devices: this.activeSockets,
+				devices: this.activeDevices,
 			});
 		});
 	}
 
-	private handleMessage(socket: Socket): void {
-		socket.on("send-message", (message) => {
-			this.io.emit("sent-message", message);
+	private handleReceiveClipboardContent(socket: Socket): void {
+		socket.on("save-clipboard-content", (clipboard) => {
+			// TODO: Send content to only authorized peer
+			socket.broadcast.emit("saved-clipboard-content", {
+				owner: clipboard.owner,
+				device: clipboard.device,
+				content: clipboard.content,
+			});
 		});
 	}
 
 	private handleDeviceConnection(socket: Socket): void {
 		const deviceUsername = generateUsername("", 0, 4);
 
-		const existingSocket = this.activeSockets.find(
-			(existingSocket) => existingSocket === deviceUsername
+		const existingDevice = this.activeDevices.find(
+			(existingDevice) => existingDevice.username === deviceUsername
 		);
 
-		if (!existingSocket) {
-			const connectedDevices = this.activeSockets.filter(
-				(existingSocket) => existingSocket !== deviceUsername
-			);
+		// check if connected device is unique
+		if (!existingDevice) {
+			const newlyConnectedDevice = {
+				id: socket.id,
+				username: deviceUsername,
+			};
 
-			this.activeSockets.push(deviceUsername);
+			// save newly connected device
+			this.activeDevices.push(newlyConnectedDevice);
+
+			// store a list of all active devices except the newly connected device
+			const connectedDevices = this.activeDevices.filter(
+				(existingDevice) => existingDevice.username !== deviceUsername
+			);
 
 			// TODO: add support for connecting to 3 devices simutaneously
 			socket.emit("update-devices-list", {
-				devices: connectedDevices,
+				device: deviceUsername,
+				activeDevices: this.activeDevices,
 			});
 
 			socket.broadcast.emit("update-devices-list", {
-				devices: [deviceUsername],
+				device: deviceUsername,
+				activeDevices: this.activeDevices,
 			});
 
+			socket.emit("connected", { id: socket.id });
 		}
 	}
 

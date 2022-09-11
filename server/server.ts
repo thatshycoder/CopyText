@@ -18,7 +18,6 @@ export default class Server {
 
 		this.configureApp();
 		this.handleSocketConnection();
-		this.handleSocketDisconnection();
 	}
 
 	private handleSocketConnection(): void {
@@ -29,6 +28,22 @@ export default class Server {
 
 			this.handleDeviceConnection(socket);
 			this.handleMessage(socket);
+			this.handleSocketDisconnection(socket);
+		});
+	}
+
+	private handleSocketDisconnection(socket: Socket): void {
+		socket.on("disconnect", () => {
+			console.log("socket disconnected");
+
+			this.activeSockets = this.activeSockets.filter(
+				(existingSocket) => existingSocket !== socket.id
+			);
+
+			// TODO: Ensure disconnection is done properly
+			socket.emit("removed-device", {
+				devices: this.activeSockets,
+			});
 		});
 	}
 
@@ -39,7 +54,6 @@ export default class Server {
 	}
 
 	private handleDeviceConnection(socket: Socket): void {
-		//
 		const deviceUsername = generateUsername("", 0, 4);
 
 		const existingSocket = this.activeSockets.find(
@@ -47,34 +61,27 @@ export default class Server {
 		);
 
 		if (!existingSocket) {
+			const connectedDevices = this.activeSockets.filter(
+				(existingSocket) => existingSocket !== deviceUsername
+			);
+
 			this.activeSockets.push(deviceUsername);
 
+			// TODO: add support for connecting to 3 devices simutaneously
 			socket.emit("update-devices-list", {
-				devices: this.activeSockets.filter(
-					(existingSocket) => existingSocket !== deviceUsername
-				),
+				devices: connectedDevices,
 			});
 
 			socket.broadcast.emit("update-devices-list", {
-				devices: deviceUsername,
+				devices: [deviceUsername],
 			});
+
 		}
 	}
 
 	private handleSocketConnectionError(): void {
 		this.io.on("connect_error", (err) => {
 			console.log(`Socket connect_error due to ${err.message}`);
-		});
-	}
-
-	private handleSocketDisconnection(): void {
-		this.io.on("disconnect", (socket) => {
-			this.activeSockets = this.activeSockets.filter(
-				(existingSocket) => existingSocket !== socket.id
-			);
-			socket.broadcast.emit("removed-device", {
-				socketId: socket.id,
-			});
 		});
 	}
 

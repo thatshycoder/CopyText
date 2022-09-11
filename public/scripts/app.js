@@ -8,17 +8,24 @@ const App = {
 		display: "uus33",
 		// ensure to show only devices on the same network
 		connectedDevices: [],
+		devicesClipboard: {},
 	},
 
 	methods: {
 		handlePasteBtn(device) {
-			alert(device);
+			// copy device clipboard content
+			navigator.clipboard.readText().then((text) => {
+				this.devicesClipboard[device] = {
+					authorizedDevices: [],
+					clipboardContent: text,
+				};
 
-			// get device clipboard content
+				console.log(JSON.stringify(this.devicesClipboard));
+			});
 		},
 
 		handleCopyBtn(device) {
-			alert(device);
+			// check if device is part of devices authorized to copy content
 		},
 
 		//handle new device connection
@@ -45,13 +52,12 @@ const App = {
 	mounted() {
 		socket.on("update-devices-list", (socket) => {
 			console.log("New device connected");
-
 			this.updateConnectedDevicesList(socket.devices);
 		});
 
-		socket.on("sent-message", (message) => {
-			console.log(message);
-			this.updateMessage(message);
+		socket.on("removed-device", (socket) => {
+			console.log("disconnected");
+			this.updateConnectedDevicesList(socket.devices);
 		});
 	},
 };

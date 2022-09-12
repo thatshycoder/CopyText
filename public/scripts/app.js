@@ -63,9 +63,9 @@ const App = {
 			if (this.connectedDevice == socket.device) {
 				const el = document.getElementById("clipboard-content");
 				el.value = socket.content;
-			}
 
-			//this.copiedContent = socket.content;
+				this.copiedContent = socket.content;
+			}
 		});
 
 		socket.on("removed-device", (socket) => {

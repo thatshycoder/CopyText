@@ -18,6 +18,8 @@ const App = {
 			navigator.clipboard.readText().then((text) => {
 				this.sendClipboardContentToServer(device, text);
 			});
+
+			alert("Pasted text on this device!");
 		},
 
 		sendClipboardContentToServer(device, content) {

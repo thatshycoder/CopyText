@@ -2,6 +2,11 @@ body {
 	background-color: #fff;
 }
 
+#app {
+	height: 100vh;
+	display: flex;
+}
+
 .device-icon {
 	background-color: #ccc;
 	padding: 30px;

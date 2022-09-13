@@ -10,8 +10,11 @@
 		<script src="/socket.io/socket.io.js"></script>
 	</head>
 	<body>
-		<div class="container mt-5 text-center" id="app">
-			<div class="">
+		<div
+			class="container mt-5 text-center d-flex align-items-center justify-content-center"
+			id="app"
+		>
+			<div class="content">
 				<div class="mb-5">
 					<h2>CopyText</h2>
 				</div>
@@ -20,9 +23,9 @@
 						<p class="mb-5 text-danger">
 							<strong>Active Devices</strong>
 						</p>
-						<div class="row">
+						<div class="row align-items-center justify-content-center">
 							<div
-								class="col-12 col-md-2 mb-3"
+								class="col-12 col-md-4 col-lg-4 mb-3 align-self-center"
 								v-for="(device, key) in getAllDevices()"
 								:key="key"
 							>
@@ -36,20 +39,30 @@
 										<h5>{{ device.username }}</h5>
 										<small>{{ device.platform }}</small>
 									</div>
+									<textarea
+										id="content-to-copy"
+										class="form-control mb-3"
+										placeholder="Put the text to paste on other devices here"
+										v-show="!clipboardApiAvailable()"
+									>
+									</textarea>
 									<button
+										id="pasteBtn"
 										class="btn btn-dark"
 										@click="handlePasteBtn(device.username)"
 									>
-										Paste here
+										Copy to device
 									</button>
-									<div class="mt-3" v-show="copiedContent !== ''">
-										<textarea class="form-control" id="clipboard-content">
-											{{ copiedContent }}
-										</textarea
-										>
-									</div>
 								</div>
 							</div>
+						</div>
+						<div class="mt-1" v-show="copiedContent !== ''">
+							<hr />
+							<strong>Copied Text:</strong>
+							<textarea class="form-control mt-2" id="clipboard-content">
+								{{ copiedContent }}
+							</textarea
+							>
 						</div>
 					</div>
 					<div v-else>
@@ -70,6 +83,7 @@
 			</div>
 		</div>
 		<script src="./scripts/vue.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
 		<script src="./scripts/index.js" type="module"></script>
 	</body>
 </html>

@@ -13,11 +13,19 @@ const App = {
 	},
 
 	methods: {
-		handlePasteBtn(device) {
-			// copy device clipboard content
-			navigator.clipboard.readText().then((text) => {
-				this.sendClipboardContentToServer(device, text);
-			});
+		async handlePasteBtn(device) {
+			if (this.clipboardApiAvailable()) {
+				navigator.clipboard.readText().then((text) => {
+					console.log("tex");
+					this.sendClipboardContentToServer(device, text);
+				});
+			} else {
+				const textToCopy = document.getElementById("content-to-copy");
+
+				if (textToCopy.value !== "") {
+					this.sendClipboardContentToServer(device, textToCopy.value);
+				}
+			}
 
 			alert("Pasted text on this device!");
 		},
@@ -41,6 +49,10 @@ const App = {
 
 			return devices;
 		},
+
+		clipboardApiAvailable() {
+			return navigator.clipboard !== undefined;
+		},
 	},
 
 	mounted() {
@@ -56,8 +68,6 @@ const App = {
 		});
 
 		socket.on("saved-clipboard-content", (socket) => {
-			// TODO: Add support for multiple devices
-			// TODO: Show copied content only for the right device
 			this.devicesClipboard[socket.owner] = {
 				authorizedDevice: socket.device,
 				clipboardContent: socket.content,

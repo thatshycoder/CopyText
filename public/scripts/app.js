@@ -57,6 +57,7 @@ const App = {
 
 		socket.on("saved-clipboard-content", (socket) => {
 			// TODO: Add support for multiple devices
+			// TODO: Show copied content only for the right device
 			this.devicesClipboard[socket.owner] = {
 				authorizedDevice: socket.device,
 				clipboardContent: socket.content,
@@ -71,7 +72,7 @@ const App = {
 		});
 
 		socket.on("removed-device", (socket) => {
-			console.log("disconnected");
+			console.log("Device disconnected");
 			this.updateConnectedDevicesList(socket.devices);
 		});
 	},

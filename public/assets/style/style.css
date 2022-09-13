@@ -1,0 +1,13 @@
+body {
+	background-color: #fff;
+}
+
+.device-icon {
+	background-color: #ccc;
+	padding: 30px;
+	border-radius: 50%;
+}
+
+.device-icon img {
+	width: 50px;
+}

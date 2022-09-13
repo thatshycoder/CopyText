@@ -101,7 +101,7 @@ export default class Server {
 	}
 
 	private configureApp(): void {
-		this.app.use(express.static(path.join(__dirname, "../public")));
+		this.app.use(express.static(path.join(__dirname, "../client")));
 	}
 
 	public listen(callback: (port: number) => void): void {

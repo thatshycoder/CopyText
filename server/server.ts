@@ -3,6 +3,7 @@ import { Server as SocketIOServer, Socket } from "socket.io";
 import { createServer, Server as HTTPServer } from "http";
 import path from "path";
 import { generateUsername } from "unique-username-generator";
+import { Navigator } from "node-navigator";
 
 export default class Server {
 	private httpServer: HTTPServer;
@@ -10,11 +11,13 @@ export default class Server {
 	private io: SocketIOServer;
 	private activeDevices: any[] = [];
 	private readonly DEFAULT_PORT = 3000;
+	private navigator: Navigator;
 
 	constructor() {
 		this.app = express();
 		this.httpServer = createServer(this.app);
 		this.io = new SocketIOServer(this.httpServer);
+		this.navigator = new Navigator();
 
 		this.configureApp();
 		this.handleSocketConnection();
@@ -70,25 +73,22 @@ export default class Server {
 			const newlyConnectedDevice = {
 				id: socket.id,
 				username: deviceUsername,
+				platform: this.navigator.userAgent,
 			};
 
 			// save newly connected device
 			this.activeDevices.push(newlyConnectedDevice);
 
-			// store a list of all active devices except the newly connected device
-			const connectedDevices = this.activeDevices.filter(
-				(existingDevice) => existingDevice.username !== deviceUsername
-			);
-
-			// TODO: add support for connecting to 3 devices simutaneously
 			socket.emit("update-devices-list", {
 				device: deviceUsername,
 				activeDevices: this.activeDevices,
+				platform: this.navigator.userAgent,
 			});
 
 			socket.broadcast.emit("update-devices-list", {
 				device: deviceUsername,
 				activeDevices: this.activeDevices,
+				platform: this.navigator.userAgent,
 			});
 
 			socket.emit("connected", { id: socket.id });

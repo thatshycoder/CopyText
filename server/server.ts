@@ -43,8 +43,7 @@ export default class Server {
 				(existingDevice) => existingDevice.id !== socket.id
 			);
 
-			// TODO: Ensure disconnection is done properly
-			socket.emit("removed-device", {
+			socket.broadcast.emit("removed-device", {
 				devices: this.activeDevices,
 			});
 		});

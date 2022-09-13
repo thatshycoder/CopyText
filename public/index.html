@@ -11,58 +11,60 @@
 	</head>
 	<body>
 		<div class="container mt-5 text-center" id="app">
-			<div class="mb-5">
-				<h2>CopyText</h2>
-			</div>
-			<div class="text-center">
-				<div v-if="getAllDevices().length > 0">
-					<p class="mb-5 text-danger">
-						<strong>Active Devices</strong>
-					</p>
-					<div class="row">
-						<div
-							class="col-12 col-md-2 mb-3"
-							v-for="(device, key) in getAllDevices()"
-							:key="key"
-						>
-							<div class="deviceInfo">
-								<div id="deviceName" class="mb-3">
-									<div class="mb-4">
-										<span class="device-icon">
-											<img src="./assets/images/laptop.svg" />
-										</span>
+			<div class="">
+				<div class="mb-5">
+					<h2>CopyText</h2>
+				</div>
+				<div class="text-center">
+					<div v-if="getAllDevices().length > 0">
+						<p class="mb-5 text-danger">
+							<strong>Active Devices</strong>
+						</p>
+						<div class="row">
+							<div
+								class="col-12 col-md-2 mb-3"
+								v-for="(device, key) in getAllDevices()"
+								:key="key"
+							>
+								<div class="deviceInfo">
+									<div id="deviceName" class="mb-3">
+										<div class="mb-4">
+											<span class="device-icon">
+												<img src="./assets/images/laptop.svg" />
+											</span>
+										</div>
+										<h5>{{ device.username }}</h5>
+										<small>{{ device.platform }}</small>
 									</div>
-									<h5>{{ device.username }}</h5>
-									<small>{{ device.platform }}</small>
-								</div>
-								<button
-									class="btn btn-dark"
-									@click="handlePasteBtn(device.username)"
-								>
-									Paste here
-								</button>
-								<div class="mt-3" v-show="copiedContent !== ''">
-									<textarea class="form-control" id="clipboard-content">
-										{{ copiedContent }}
-									</textarea
+									<button
+										class="btn btn-dark"
+										@click="handlePasteBtn(device.username)"
 									>
+										Paste here
+									</button>
+									<div class="mt-3" v-show="copiedContent !== ''">
+										<textarea class="form-control" id="clipboard-content">
+											{{ copiedContent }}
+										</textarea
+										>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div v-else>
-					<p class="mb-4">Open CopyText on other devices to copy texts</p>
-					<img src="./assets/images/loading.gif" width="50" />
-				</div>
-				<div class="mt-5">
-					<hr />
-					<div v-show="connectedDevice !== ''">
-						<p>
-							<span class="text-danger">You are known as </span>
-							<span class="text-default">{{ connectedDevice }}</span>
-						</p>
-						<p>You can be discovered by everyone on this network</p>
+					<div v-else>
+						<p class="mb-4">Open CopyText on other devices to copy texts</p>
+						<img src="./assets/images/loading.gif" width="50" />
+					</div>
+					<div class="mt-5">
+						<hr />
+						<div v-show="connectedDevice !== ''">
+							<p>
+								<span class="text-danger">You are known as </span>
+								<span class="text-default">{{ connectedDevice }}</span>
+							</p>
+							<p>You can be discovered by everyone on this network</p>
+						</div>
 					</div>
 				</div>
 			</div>

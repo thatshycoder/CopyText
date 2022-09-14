@@ -33,17 +33,21 @@
 									<div id="deviceName" class="mb-3">
 										<div class="mb-4">
 											<span class="device-icon">
-												<img src="./assets/images/laptop.svg" />
+												<i class="fa fa-user-circle fa-5x"></i><br />
+												<!-- <i class="fa fa-laptop fa-4x"></i><br />
+												<i class="fa fa-tablet fa-5x"></i><br />
+												<i class="fa fa-mobile fa-5x"></i> -->
 											</span>
 										</div>
 										<h5>{{ device.username }}</h5>
-										<small>{{ device.platform }}</small>
+										<!--<small>{{ device.platform }}</small>-->
 									</div>
 									<textarea
 										id="content-to-copy"
 										class="form-control mb-3"
 										placeholder="Put the text to paste on other devices here"
 										v-show="!clipboardApiAvailable()"
+										rows="5"
 									>
 									</textarea>
 									<button
@@ -51,15 +55,20 @@
 										class="btn btn-dark"
 										@click="handlePasteBtn(device.username)"
 									>
-										Copy to device
+										Paste Here
 									</button>
 								</div>
 							</div>
 						</div>
 						<div class="mt-1" v-show="copiedContent !== ''">
-							<hr />
-							<strong>Copied Text:</strong>
-							<textarea class="form-control mt-2" id="clipboard-content">
+							<strong>Copied Text</strong>
+							<textarea
+								class="form-control mt-2"
+								id="clipboard-content"
+								readonly
+								onfocus="this.select();"
+								rows="5"
+							>
 								{{ copiedContent }}
 							</textarea
 							>

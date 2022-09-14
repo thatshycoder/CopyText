@@ -8,11 +8,11 @@ body {
 }
 
 .device-icon {
-	background-color: #ccc;
+	/* background-color: #ccc;
 	padding: 30px;
-	border-radius: 50%;
+	border-radius: 50%; */
 }
 
-.device-icon img {
-	width: 50px;
+#clipboard-content {
+	background: #ccc;
 }

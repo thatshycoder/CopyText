@@ -12,16 +12,17 @@
 	<body>
 		<div class="header">
 			<ul class="nav align-items-center justify-content-end">
-				<li class="nav-item">
+				<!--<li class="nav-item">
 					<a class="nav-link" href="#" target="_blank">
-						<img src="./assets/images/moon.png" alt="copytext-moon-icon" />
+						<img src="./assets/images/moon.png" alt="copytext-moon-icon" width="30" />
 					</a>
-				</li>
+				</li>-->
 				<li class="nav-item">
 					<a class="nav-link" href="#" target="_blank">
 						<img
 							src="./assets/images/twitter.png"
 							alt="copytext-twitter-icon"
+							width="30"
 						/>
 					</a>
 				</li>
@@ -31,7 +32,11 @@
 						href="https://github.com/thatshycoder/CopyText"
 						target="_blank"
 					>
-						<img src="./assets/images/github.png" alt="copytext-github-icon" />
+						<img
+							src="./assets/images/github.png"
+							alt="copytext-github-icon"
+							width="30"
+						/>
 					</a>
 				</li>
 			</ul>
@@ -41,7 +46,13 @@
 			id="app"
 		>
 			<div class="content">
-				<h2 class="app-title display-5">CopyText</h2>
+				<div class="app-title">
+					<img
+						src="./assets/images/copytext-logo.png"
+						alt="copytext-logo"
+						width="260"
+					/>
+				</div>
 				<div class="text-center">
 					<div v-if="getAllDevices().length > 0">
 						<textarea
@@ -82,7 +93,7 @@
 							</div>
 						</div>
 						<div class="mt-5" v-show="copiedContent !== ''">
-							<strong>Copied Text</strong>
+							<strong>Texts From Other Devices</strong>
 							<textarea
 								class="form-control mt-2"
 								id="clipboard-content"

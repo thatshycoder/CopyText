@@ -6,10 +6,6 @@
 	font-family: "Martel Sans";
 	src: url("../fonts//MartelSans-Regular.ttf");
 }
-@font-face {
-	font-family: "Martel Sans Bold";
-	src: url("../fonts/MartelSans-Bold.ttf");
-}
 
 body {
 	background-color: #fff;
@@ -20,9 +16,6 @@ body {
 }
 
 .app-title {
-	font-family: "Circular Loom", sans-serif;
-	font-weight: bold;
-	color: #6802b8;
 	margin-bottom: 100px;
 }
 

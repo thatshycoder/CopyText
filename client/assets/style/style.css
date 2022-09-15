@@ -19,6 +19,10 @@ body {
 	margin-bottom: 100px;
 }
 
+.text-brand {
+	color: #6802b8;
+}
+
 .text-danger {
 	color: #ff5722 !important;
 }

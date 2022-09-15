@@ -1,18 +1,47 @@
+@font-face {
+	font-family: "Doppio One";
+	src: url("../fonts/DoppioOne-Regular.ttf");
+}
+@font-face {
+	font-family: "Martel Sans";
+	src: url("../fonts//MartelSans-Regular.ttf");
+}
+@font-face {
+	font-family: "Martel Sans Bold";
+	src: url("../fonts/MartelSans-Bold.ttf");
+}
+
 body {
 	background-color: #fff;
+	font-family: "Martel Sans", sans-serif;
+}
+.header {
+	padding: 40px;
 }
 
-#app {
-	height: 100vh;
-	display: flex;
+.app-title {
+	font-family: "Circular Loom", sans-serif;
+	font-weight: bold;
+	color: #6802b8;
+	margin-bottom: 100px;
 }
 
-.device-icon {
-	/* background-color: #ccc;
-	padding: 30px;
-	border-radius: 50%; */
+.text-danger {
+	color: #ff5722;
 }
 
 #clipboard-content {
 	background: #ccc;
+}
+
+#pasteBtn {
+	padding: 12px 30px;
+	border-radius: 2rem;
+	margin-top: 8px;
+	font-weight: bold;
+	box-shadow: 1px 2px 14px 2px #bababa;
+}
+
+.footer {
+	margin-top: 100px;
 }

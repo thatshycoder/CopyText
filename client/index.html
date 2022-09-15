@@ -10,54 +10,75 @@
 		<script src="/socket.io/socket.io.js"></script>
 	</head>
 	<body>
+		<div class="header">
+			<ul class="nav align-items-center justify-content-end">
+				<li class="nav-item">
+					<a class="nav-link" href="#" target="_blank">
+						<img src="./assets/images/moon.png" alt="copytext-moon-icon" />
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#" target="_blank">
+						<img
+							src="./assets/images/twitter.png"
+							alt="copytext-twitter-icon"
+						/>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a
+						class="nav-link"
+						href="https://github.com/thatshycoder/CopyText"
+						target="_blank"
+					>
+						<img src="./assets/images/github.png" alt="copytext-github-icon" />
+					</a>
+				</li>
+			</ul>
+		</div>
 		<div
-			class="container mt-5 text-center d-flex align-items-center justify-content-center"
+			class="container text-center d-flex align-items-center justify-content-center"
 			id="app"
 		>
 			<div class="content">
-				<div class="mb-5">
-					<h2>CopyText</h2>
-				</div>
+				<h2 class="app-title display-5">CopyText</h2>
 				<div class="text-center">
 					<div v-if="getAllDevices().length > 0">
-						<p class="mb-5 text-danger">
+						<p class="mb-2">
 							<strong>Active Devices</strong>
 						</p>
 						<div class="row align-items-center justify-content-center">
 							<div
-								class="col-12 col-md-4 col-lg-4 mb-3 align-self-center"
+								:class="getDevicesColClasses()"
 								v-for="(device, key) in getAllDevices()"
 								:key="key"
 							>
-								<div class="deviceInfo">
-									<div id="deviceName" class="mb-3">
-										<div class="mb-4">
-											<span class="device-icon">
-												<i class="fa fa-user-circle fa-5x"></i><br />
-												<!-- <i class="fa fa-laptop fa-4x"></i><br />
-												<i class="fa fa-tablet fa-5x"></i><br />
-												<i class="fa fa-mobile fa-5x"></i> -->
-											</span>
-										</div>
-										<h5>{{ device.username }}</h5>
-										<!--<small>{{ device.platform }}</small>-->
+								<div class="deviceInfo mt-4">
+									<div class="device-icon">
+										<img
+											src="./assets/images/laptop.png"
+											alt="copytext-laptop-icon"
+											width="120"
+										/>
 									</div>
-									<textarea
-										id="content-to-copy"
-										class="form-control mb-3"
-										placeholder="Put the text to paste on other devices here"
-										v-show="!clipboardApiAvailable()"
-										rows="5"
-									>
-									</textarea>
-									<button
-										id="pasteBtn"
-										class="btn btn-dark"
-										@click="handlePasteBtn(device.username)"
-									>
-										Paste Here
-									</button>
+									<h5 class="mt-2">{{ device.username }}</h5>
+									<!--<small>{{ device.platform }}</small>-->
 								</div>
+								<textarea
+									id="content-to-copy"
+									class="form-control mb-3"
+									placeholder="Put the text to paste on other devices here"
+									v-show="!clipboardApiAvailable()"
+									rows="5"
+								>
+								</textarea>
+								<button
+									id="pasteBtn"
+									class="btn btn-dark"
+									@click="handlePasteBtn(device.username)"
+								>
+									Paste Here
+								</button>
 							</div>
 						</div>
 						<div class="mt-1" v-show="copiedContent !== ''">
@@ -69,21 +90,20 @@
 								onfocus="this.select();"
 								rows="5"
 							>
-								{{ copiedContent }}
-							</textarea
+									{{ copiedContent }}
+								</textarea
 							>
 						</div>
 					</div>
 					<div v-else>
-						<p class="mb-4">Open CopyText on other devices to copy texts</p>
-						<img src="./assets/images/loading.gif" width="50" />
+						<p class="h4 mb-4">Open CopyText on other devices to share texts</p>
+						<img src="./assets/images/loading.gif" width="100" />
 					</div>
-					<div class="mt-5">
-						<hr />
+					<div class="footer">
 						<div v-show="connectedDevice !== ''">
 							<p>
-								<span class="text-danger">You are known as </span>
-								<span class="text-default">{{ connectedDevice }}</span>
+								<span class="text-default">You are known as </span>
+								<span class="text-danger">{{ connectedDevice }}</span>
 							</p>
 							<p>You can be discovered by everyone on this network</p>
 						</div>

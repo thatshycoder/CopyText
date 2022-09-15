@@ -53,6 +53,16 @@ const App = {
 		clipboardApiAvailable() {
 			return navigator.clipboard !== undefined;
 		},
+
+		getDevicesColClasses() {
+			if (this.getAllDevices().length > 0) {
+				if (this.getAllDevices().length < 3) {
+					return "align-self-center col-12 col-md-6 col-lg-6";
+				}
+			}
+
+			return "align-self-center col-12 col-md-4 col-lg-4";
+		},
 	},
 
 	mounted() {

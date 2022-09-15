@@ -27,11 +27,18 @@ body {
 }
 
 .text-danger {
-	color: #ff5722;
+	color: #ff5722 !important;
+}
+
+#content-to-copy {
+	padding: 20px;
+	box-shadow: 6px 7px 0px 0px #d7d7d7;
 }
 
 #clipboard-content {
-	background: #ccc;
+	background: #eaeaea;
+	padding: 20px;
+	box-shadow: 6px 7px 0px 0px #d7d7d7;
 }
 
 #pasteBtn {
@@ -44,4 +51,5 @@ body {
 
 .footer {
 	margin-top: 100px;
+	padding-bottom: 50px;
 }

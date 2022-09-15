@@ -18,16 +18,20 @@ const App = {
 				navigator.clipboard.readText().then((text) => {
 					console.log("tex");
 					this.sendClipboardContentToServer(device, text);
+
+					alert("Pasted text on this device!");
 				});
 			} else {
 				const textToCopy = document.getElementById("content-to-copy");
 
 				if (textToCopy.value !== "") {
 					this.sendClipboardContentToServer(device, textToCopy.value);
+
+					alert("Pasted text on this device!");
+				} else {
+					alert("No text to share!");
 				}
 			}
-
-			alert("Pasted text on this device!");
 		},
 
 		sendClipboardContentToServer(device, content) {

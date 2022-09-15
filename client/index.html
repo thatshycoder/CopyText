@@ -44,6 +44,14 @@
 				<h2 class="app-title display-5">CopyText</h2>
 				<div class="text-center">
 					<div v-if="getAllDevices().length > 0">
+						<textarea
+							id="content-to-copy"
+							class="form-control mb-5"
+							placeholder="Put the text to share with other devices here"
+							v-show="!clipboardApiAvailable()"
+							rows="5"
+						>
+						</textarea>
 						<p class="mb-2">
 							<strong>Active Devices</strong>
 						</p>
@@ -64,24 +72,16 @@
 									<h5 class="mt-2">{{ device.username }}</h5>
 									<!--<small>{{ device.platform }}</small>-->
 								</div>
-								<textarea
-									id="content-to-copy"
-									class="form-control mb-3"
-									placeholder="Put the text to paste on other devices here"
-									v-show="!clipboardApiAvailable()"
-									rows="5"
-								>
-								</textarea>
 								<button
 									id="pasteBtn"
 									class="btn btn-dark"
 									@click="handlePasteBtn(device.username)"
 								>
-									Paste Here
+									Paste Text
 								</button>
 							</div>
 						</div>
-						<div class="mt-1" v-show="copiedContent !== ''">
+						<div class="mt-5" v-show="copiedContent !== ''">
 							<strong>Copied Text</strong>
 							<textarea
 								class="form-control mt-2"

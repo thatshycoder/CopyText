@@ -5,8 +5,8 @@ const App = {
 	el: "#app",
 
 	data: {
-		// ensure to show only devices on the same network
 		connectedDevice: "",
+		connectedDeviceIp: "",
 		connectedDevices: [],
 		devicesClipboard: {},
 		copiedContent: "",
@@ -48,7 +48,9 @@ const App = {
 
 		getAllDevices() {
 			const devices = this.connectedDevices.filter(
-				(device) => device.username !== this.connectedDevice
+				(device) =>
+					device.username !== this.connectedDevice &&
+					device.clientIp == this.connectedDeviceIp
 			);
 
 			return devices;
@@ -76,9 +78,12 @@ const App = {
 		});
 
 		socket.on("connected", (socket) => {
-			this.connectedDevice = this.connectedDevices.filter(
+			const connectedDeviceInfo = this.connectedDevices.filter(
 				(device) => device.id === socket.id
-			)[0].username;
+			)[0];
+
+			this.connectedDevice = connectedDeviceInfo.username;
+			this.connectedDeviceIp = connectedDeviceInfo.clientIp;
 		});
 
 		socket.on("saved-clipboard-content", (socket) => {

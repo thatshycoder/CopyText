@@ -51,7 +51,7 @@ export default class Server {
 
 	private handleReceiveClipboardContent(socket: Socket): void {
 		socket.on("save-clipboard-content", (clipboard) => {
-			// TODO: Send content to only authorized peer
+
 			socket.broadcast.emit("saved-clipboard-content", {
 				owner: clipboard.owner,
 				device: clipboard.device,
@@ -62,6 +62,10 @@ export default class Server {
 
 	private handleDeviceConnection(socket: Socket): void {
 		const deviceUsername = generateUsername("", 0, 4);
+		const clientIpAddress =
+			socket.request.headers["x-forwarded-for"] ||
+			socket.request.socket.remoteAddress ||
+			null;
 
 		const existingDevice = this.activeDevices.find(
 			(existingDevice) => existingDevice.username === deviceUsername
@@ -73,6 +77,7 @@ export default class Server {
 				id: socket.id,
 				username: deviceUsername,
 				platform: this.navigator.userAgent,
+				clientIp: clientIpAddress,
 			};
 
 			// save newly connected device
@@ -82,12 +87,14 @@ export default class Server {
 				device: deviceUsername,
 				activeDevices: this.activeDevices,
 				platform: this.navigator.userAgent,
+				clientIp: clientIpAddress,
 			});
 
 			socket.broadcast.emit("update-devices-list", {
 				device: deviceUsername,
 				activeDevices: this.activeDevices,
 				platform: this.navigator.userAgent,
+				clientIp: clientIpAddress,
 			});
 
 			socket.emit("connected", { id: socket.id });

@@ -4,7 +4,7 @@
 
 **CopyText is built with the following technologies:**
 
-- Vanilla HTML5 / ES6 / CSS3 frontend
+- Vanilla HTML5 / ES6 / CSS3 & [Vue](https://vuejs.org/) frontend
 - [TypeScript](https://www.typescriptlang.org/)
 - [WebRTC](http://webrtc.org/) / (Socket.io)[https://socket.io]
 - [NodeJS](https://nodejs.org/en/) backend

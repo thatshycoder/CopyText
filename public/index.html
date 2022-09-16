@@ -7,7 +7,7 @@
 		<title>CopyText | Copy/Paste text accross multiple devices</title>
 		<link href="./assets/style/bootstrap.min.css" rel="stylesheet" />
 		<link href="./assets/style/style.css" rel="stylesheet" />
-		<script src="./scripts/socket.io.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
 	</head>
 	<body>
 		<div class="header">
@@ -59,7 +59,7 @@
 							id="content-to-copy"
 							class="form-control mb-5"
 							placeholder="Put the text to share with other devices here"
-							v-show="!clipboardApiAvailable()"
+							v-show="!clipboardApiAvailable() || !clipboardApiAvailableOnFirefox()"
 							rows="5"
 						>
 						</textarea>

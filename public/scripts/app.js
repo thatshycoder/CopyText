@@ -13,8 +13,11 @@ const App = {
 	},
 
 	methods: {
-		async handlePasteBtn(device) {
-			if (this.clipboardApiAvailable()) {
+		handlePasteBtn(device) {
+			if (
+				this.clipboardApiAvailable() &&
+				this.clipboardApiAvailableOnFirefox()
+			) {
 				navigator.clipboard.readText().then((text) => {
 					console.log("tex");
 					this.sendClipboardContentToServer(device, text);
@@ -49,14 +52,19 @@ const App = {
 		getAllDevices() {
 			const devices = this.connectedDevices.filter(
 				(device) =>
-					device.username !== this.connectedDevice 
+					device.username !== this.connectedDevice &&
+					device.clientIp == this.connectedDeviceIp
 			);
 
 			return devices;
 		},
 
 		clipboardApiAvailable() {
-			return navigator.clipboard !== undefined;
+			return typeof navigator.clipboard !== "undefined";
+		},
+
+		clipboardApiAvailableOnFirefox() {
+			return typeof navigator.clipboard.readText !== "undefined";
 		},
 
 		getDevicesColClasses() {

@@ -10,7 +10,7 @@ export default class Server {
 	private app: Application;
 	private io: SocketIOServer;
 	private activeDevices: any[] = [];
-	private readonly DEFAULT_PORT = 3000;
+	private readonly DEFAULT_PORT = process.env.PORT || 3000;
 	private navigator: Navigator;
 
 	constructor() {

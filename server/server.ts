@@ -10,7 +10,7 @@ export default class Server {
 	private app: Application;
 	private io: SocketIOServer;
 	private activeDevices: any[] = [];
-	private readonly DEFAULT_PORT = process.env.PORT || 3000;
+	private readonly DEFAULT_PORT = process.env.PORT || 8080;
 	private navigator: Navigator;
 
 	constructor() {
@@ -108,7 +108,7 @@ export default class Server {
 	}
 
 	private configureApp(): void {
-		this.app.use(express.static(path.join(__dirname, "../client")));
+		this.app.use(express.static(path.join(__dirname, "../public")));
 	}
 
 	public listen(callback: (port: string|number) => void): void {

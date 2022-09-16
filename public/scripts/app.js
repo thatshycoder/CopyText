@@ -49,8 +49,7 @@ const App = {
 		getAllDevices() {
 			const devices = this.connectedDevices.filter(
 				(device) =>
-					device.username !== this.connectedDevice &&
-					device.clientIp == this.connectedDeviceIp
+					device.username !== this.connectedDevice 
 			);
 
 			return devices;

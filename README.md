@@ -12,6 +12,6 @@
 
 ## Support the CopyText Community
 
-Snapdrop is completely free. However, if you want to contribute, please send crypto to the following addresses:
+CopyText is completely free. However, if you want to contribute, please send crypto to the following addresses:
 
 Thanks a lot for your support!

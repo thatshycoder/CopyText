@@ -1,8 +1,4 @@
 @font-face {
-	font-family: "Doppio One";
-	src: url("../fonts/DoppioOne-Regular.ttf");
-}
-@font-face {
 	font-family: "Martel Sans";
 	src: url("../fonts//MartelSans-Regular.ttf");
 }
@@ -11,8 +7,13 @@ body {
 	background-color: #fff;
 	font-family: "Martel Sans", sans-serif;
 }
+
 .header {
 	padding: 40px;
+}
+
+.nav-link img:hover {
+	opacity: 0.8;
 }
 
 .app-title {
@@ -44,6 +45,22 @@ body {
 	margin-top: 8px;
 	font-weight: bold;
 	box-shadow: 1px 2px 14px 2px #bababa;
+}
+
+#pasteBtn:hover {
+	border: none;
+}
+
+#pasteBtn:focus {
+	background: #2a323a;
+	border: 1px solid white;
+}
+
+#clipboard-copy-btn {
+	position: relative;
+	top: 33px;
+	padding: 3px 7px;
+	font-size: 15px;
 }
 
 .footer {

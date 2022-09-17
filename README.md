@@ -10,7 +10,7 @@
 - [NodeJS](https://nodejs.org/en/) backend
 - [Progressive Web App](https://wikipedia.org/wiki/Progressive_Web_App)
 
-## Support the CopyText Community
+## Support CopyText
 
 CopyText is completely free. However, if you want to contribute, please send crypto to the following addresses:
 

@@ -18,7 +18,11 @@
 					</a>
 				</li>-->
 				<li class="nav-item">
-					<a class="nav-link" href="#" target="_blank">
+					<a
+						class="nav-link"
+						href="https://twitter.com/intent/tweet?text=Love%20CopyText%20App%20by%20@thatshycoder%0A&url=https://copytext.net&hashtags=CopyText"
+						target="_blank"
+					>
 						<img
 							src="./assets/images/twitter.png"
 							alt="copytext-twitter-icon"
@@ -78,15 +82,17 @@
 											src="./assets/images/laptop.png"
 											alt="copytext-laptop-icon"
 											width="120"
+											@click="handlePasteBtn(device.username)"
 										/>
 									</div>
 									<h5 class="mt-2">{{ device.username }}</h5>
-									<!--<small>{{ device.platform }}</small>-->
+									<!-- <small>{{ device.platform }}</small> -->
 								</div>
 								<button
 									id="pasteBtn"
-									class="btn btn-dark"
+									class="btn btn-dark mt-2"
 									@click="handlePasteBtn(device.username)"
+									title="Paste clipboard texts on this device"
 								>
 									Paste Text
 								</button>
@@ -94,8 +100,18 @@
 						</div>
 						<div class="mt-5" v-show="copiedContent !== ''">
 							<strong class="text-brand">Texts From Other Devices</strong>
+							<div class="d-flex justify-content-end mt-2">
+								<button
+									id="clipboard-copy-btn"
+									class="btn btn-dark"
+									data-clipboard-target="#clipboard-content"
+									title="Copy texts to clipboard"
+								>
+									Copy
+								</button>
+							</div>
 							<textarea
-								class="form-control mt-2"
+								class="form-control"
 								id="clipboard-content"
 								readonly
 								onfocus="this.select();"
@@ -123,7 +139,7 @@
 			</div>
 		</div>
 		<script src="./scripts/vue.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+		<script src="./scripts/clipboard.min.js"></script>
 		<script src="./scripts/index.js" type="module"></script>
 	</body>
 </html>

@@ -5,6 +5,7 @@ const App = {
 	el: "#app",
 
 	data: {
+		// show dynamic icons for different devices
 		connectedDevice: "",
 		connectedDeviceIp: "",
 		connectedDevices: [],
@@ -19,7 +20,6 @@ const App = {
 				this.clipboardApiAvailableOnFirefox()
 			) {
 				navigator.clipboard.readText().then((text) => {
-					console.log("tex");
 					this.sendClipboardContentToServer(device, text);
 
 					alert("Pasted text on this device!");

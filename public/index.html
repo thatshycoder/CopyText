@@ -42,7 +42,6 @@
 		/>
 		<link rel="icon" sizes="96x96" href="./assets/images/favicon.png" />
 		<link rel="shortcut icon" href="./assets/images/favicon.png" />
-
 		<link href="./assets/style/bootstrap.min.css" rel="stylesheet" />
 		<link href="./assets/style/style.css" rel="stylesheet" />
 		<script src="/socket.io/socket.io.js"></script>
@@ -124,23 +123,23 @@
 											@click="handlePasteBtn(device.username)"
 										/>
 										<img
-											v-if="device.platform.device.type == 'mobile'"
+											v-else-if="device.platform.device.type == 'mobile'"
 											src="./assets/images/mobile.png"
-											alt="copytext-laptop-icon"
+											alt="copytext-mobile-icon"
 											width="120"
 											@click="handlePasteBtn(device.username)"
 										/>
 										<img
 											v-else-if="device.platform.device.type == 'tablet'"
 											src="./assets/images/tablet.png"
-											alt="copytext-laptop-icon"
+											alt="copytext-tablet-icon"
 											width="120"
 											@click="handlePasteBtn(device.username)"
 										/>
 										<img
 											v-else
 											src="./assets/images/user.png"
-											alt="copytext-laptop-icon"
+											alt="copytext-user-icon"
 											width="120"
 											@click="handlePasteBtn(device.username)"
 										/>

@@ -4,12 +4,13 @@ import { createServer, Server as HTTPServer } from "http";
 import path from "path";
 import { generateUsername } from "unique-username-generator";
 import { Navigator } from "node-navigator";
+import { ActiveDevices } from "./iserver";
 
-export default class Server {
+export default class CopyTextServer {
 	private httpServer: HTTPServer;
 	private app: Application;
 	private io: SocketIOServer;
-	private activeDevices: any[] = [];
+	private activeDevices: ActiveDevices[] = [];
 	private readonly DEFAULT_PORT = process.env.PORT || 8080;
 	private navigator: Navigator;
 
@@ -30,36 +31,52 @@ export default class Server {
 			console.log("Socket connected");
 
 			this.handleDeviceConnection(socket);
-			this.handleReceiveClipboardContent(socket);
-			this.handleSocketDisconnection(socket);
+			this.handleSendClipboardContent(socket);
+			this.handleDeviceDisconnection(socket);
 		});
 	}
 
-	private handleSocketDisconnection(socket: Socket): void {
+	/**
+	 * Emits an event when a device disconnects from the network
+	 *
+	 * @param socket
+	 */
+	private handleDeviceDisconnection(socket: Socket): void {
 		socket.on("disconnect", () => {
-			console.log("socket disconnected");
+			console.log("Socket disconnected");
 
+			// update devices list
 			this.activeDevices = this.activeDevices.filter(
 				(existingDevice) => existingDevice.id !== socket.id
 			);
 
-			socket.broadcast.emit("removed-device", {
+			socket.broadcast.emit("disconnected-device", {
 				devices: this.activeDevices,
 			});
 		});
 	}
 
-	private handleReceiveClipboardContent(socket: Socket): void {
-		socket.on("save-clipboard-content", (clipboard) => {
-
-			socket.broadcast.emit("saved-clipboard-content", {
-				owner: clipboard.owner,
-				device: clipboard.device,
+	/**
+	 * Emits an event that sends clipboard content to connected devices
+	 * on the network
+	 *
+	 * @param socket
+	 */
+	private handleSendClipboardContent(socket: Socket): void {
+		socket.on("send-clipboard-content", (clipboard) => {
+			socket.broadcast.emit("sent-clipboard-content", {
+				sender: clipboard.sender,
+				receiver: clipboard.receiver,
 				content: clipboard.content,
 			});
 		});
 	}
 
+	/**
+	 * Emits an event when a new device connects to the server
+	 *
+	 * @param socket
+	 */
 	private handleDeviceConnection(socket: Socket): void {
 		const deviceUsername = generateUsername("", 0, 4);
 		const clientIpAddress =
@@ -83,35 +100,35 @@ export default class Server {
 			// save newly connected device
 			this.activeDevices.push(newlyConnectedDevice);
 
-			socket.emit("update-devices-list", {
-				device: deviceUsername,
+			socket.emit("updated-devices-list", {
 				activeDevices: this.activeDevices,
-				platform: this.navigator.userAgent,
-				clientIp: clientIpAddress,
 			});
 
-			socket.broadcast.emit("update-devices-list", {
-				device: deviceUsername,
+			socket.broadcast.emit("updated-devices-list", {
 				activeDevices: this.activeDevices,
-				platform: this.navigator.userAgent,
-				clientIp: clientIpAddress,
 			});
 
 			socket.emit("connected", { id: socket.id });
 		}
 	}
 
+	/**
+	 * Logs an error message on socket connection error
+	 */
 	private handleSocketConnectionError(): void {
 		this.io.on("connect_error", (err) => {
-			console.log(`Socket connect_error due to ${err.message}`);
+			console.log(`Socket connection error due to ${err.message}`);
 		});
 	}
 
+	/**
+	 * Configures express to serve html files in ../public directory
+	 */
 	private configureApp(): void {
 		this.app.use(express.static(path.join(__dirname, "../public")));
 	}
 
-	public listen(callback: (port: string|number) => void): void {
+	public listen(callback: (port: string | number) => void): void {
 		this.httpServer.listen(this.DEFAULT_PORT, () =>
 			callback(this.DEFAULT_PORT)
 		);

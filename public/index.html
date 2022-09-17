@@ -5,6 +5,44 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
 		<title>CopyText | Easily Copy/Paste text across multiple devices</title>
+		<!-- Social Tags -->
+		<meta
+			name="description"
+			content="Instantly Copy/Paste texts across multiples devices nearby."
+		/>
+		<meta
+			name="keywords"
+			content="Text, Share, Copy, Paste, Transfer, Peer2Peer, P2P"
+		/>
+		<meta name="author" content="Shycoder" />
+		<meta property="og:title" content="CopyText" />
+		<meta property="og:type" content="article" />
+		<meta property="og:url" content="https://copytext.net/" />
+		<meta
+			property="og:author"
+			content="https://www.linkedin.com/in/itiel-kasumu"
+		/>
+		<meta name="twitter:author" content="@thatshycoder" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta
+			name="twitter:description"
+			content="Instantly Copy/Paste texts across multiples devices nearby."
+		/>
+		<meta
+			name="og:description"
+			content="Instantly Copy/Paste texts across multiples devices nearby."
+		/>
+		<meta
+			name="twitter:image"
+			content="https://copytext.net/images/twitter-banner.jpg"
+		/>
+		<meta
+			property="og:image"
+			content="https://copytext.net/images/twitter-stream.jpg"
+		/>
+		<link rel="icon" sizes="96x96" href="./assets/images/favicon.png" />
+		<link rel="shortcut icon" href="./assets/images/favicon.png" />
+
 		<link href="./assets/style/bootstrap.min.css" rel="stylesheet" />
 		<link href="./assets/style/style.css" rel="stylesheet" />
 		<script src="/socket.io/socket.io.js"></script>
@@ -60,7 +98,7 @@
 				<div class="text-center">
 					<div v-if="getAllDevices().length > 0">
 						<textarea
-							id="content-to-copy"
+							id="text-to-send"
 							class="form-control mb-5"
 							placeholder="Put the text to share with other devices here"
 							v-show="!clipboardApiAvailable() || !clipboardApiAvailableOnFirefox()"
@@ -79,6 +117,21 @@
 								<div class="deviceInfo mt-4">
 									<div class="device-icon">
 										<img
+											v-if="isMobile"
+											src="./assets/images/laptop.png"
+											alt="copytext-laptop-icon"
+											width="120"
+											@click="handlePasteBtn(device.username)"
+										/>
+										<img
+											v-else-if="isTablet"
+											src="./assets/images/laptop.png"
+											alt="copytext-laptop-icon"
+											width="120"
+											@click="handlePasteBtn(device.username)"
+										/>
+										<img
+											v-else="isTablet"
 											src="./assets/images/laptop.png"
 											alt="copytext-laptop-icon"
 											width="120"
@@ -124,13 +177,17 @@
 					</div>
 					<div v-else>
 						<p class="h4 mb-4">Open CopyText on other devices to share texts</p>
-						<img src="./assets/images/loading.gif" width="100" alt="copytext-loading-icon" />
+						<img
+							src="./assets/images/loading.gif"
+							width="100"
+							alt="copytext-loading-icon"
+						/>
 					</div>
 					<div class="footer">
-						<div v-show="connectedDevice !== ''">
+						<div v-show="activeDevice !== ''">
 							<p>
 								<span class="text-default">You are known as </span>
-								<span class="text-danger">{{ connectedDevice }}</span>
+								<span class="text-danger">{{ activeDevice }}</span>
 							</p>
 							<p>You can be discovered by everyone on this network</p>
 						</div>

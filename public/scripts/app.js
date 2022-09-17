@@ -6,67 +6,65 @@ const App = {
 
 	data: {
 		// show dynamic icons for different devices
-		connectedDevice: "",
-		connectedDeviceIp: "",
-		connectedDevices: [],
+		activeDevice: "",
+		activeDeviceIp: "",
+		activeDevices: [],
 		devicesClipboard: {},
 		copiedContent: "",
 	},
 
 	methods: {
-		handlePasteBtn(device) {
+		handlePasteBtn(receiver) {
 			if (
 				this.clipboardApiAvailable() &&
 				this.clipboardApiAvailableOnFirefox()
 			) {
 				navigator.clipboard.readText().then((text) => {
-					this.sendClipboardContentToServer(device, text);
-
-					alert("Pasted text on this device!");
+					this.sendPastedTextsToServer(receiver, text);
 				});
 			} else {
-				const textToCopy = document.getElementById("content-to-copy");
+				const textToSend = document.getElementById("content-to-copy");
 
-				if (textToCopy.value !== "") {
-					this.sendClipboardContentToServer(device, textToCopy.value);
-
-					alert("Pasted text on this device!");
+				if (textToSend.value !== "") {
+					this.sendPastedTextsToServer(receiver, textToSend.value);
 				} else {
 					alert("No text to share!");
 				}
 			}
 		},
 
-		sendClipboardContentToServer(device, content) {
-			socket.emit("save-clipboard-content", {
-				owner: this.connectedDevice,
-				device: device,
+		// emits an event that sends the pasted texts to the server
+		sendPastedTextsToServer(receiver, content) {
+			socket.emit("send-clipboard-content", {
+				sender: this.activeDevice,
+				receiver: receiver,
 				content: content,
 			});
-		},
 
-		updateConnectedDevicesList(devices) {
-			this.connectedDevices = devices;
-		},
-
-		getAllDevices() {
-			const devices = this.connectedDevices.filter(
-				(device) =>
-					device.username !== this.connectedDevice &&
-					device.clientIp == this.connectedDeviceIp
-			);
-
-			return devices;
-		},
-
-		clipboardApiAvailable() {
-			return typeof navigator.clipboard !== "undefined";
+			// TODO: Display nicer alerts
+			alert("Pasted text on this device!");
 		},
 
 		clipboardApiAvailableOnFirefox() {
 			return typeof navigator.clipboard.readText !== "undefined";
 		},
 
+		clipboardApiAvailable() {
+			return typeof navigator.clipboard !== "undefined";
+		},
+
+		getAllDevices() {
+			// get all active devices currently connected to the same network
+			// (The devices needs to have the same ip address to confirm they're on
+			// the same network) - TODO: Improve this later?
+			return this.activeDevices.filter(
+				(device) =>
+					device.username !== this.activeDevice &&
+					device.clientIp == this.activeDeviceIp
+			);
+		},
+
+		// render active devices list grid correctly & nicely
 		getDevicesColClasses() {
 			if (this.getAllDevices().length > 0) {
 				if (this.getAllDevices().length < 3) {
@@ -76,40 +74,52 @@ const App = {
 
 			return "align-self-center col-12 col-md-4 col-lg-4";
 		},
-	},
 
-	mounted() {
-		socket.on("update-devices-list", (socket) => {
-			console.log("New device connected");
-			this.updateConnectedDevicesList(socket.activeDevices);
-		});
-
-		socket.on("connected", (socket) => {
-			const connectedDeviceInfo = this.connectedDevices.filter(
-				(device) => device.id === socket.id
-			)[0];
-
-			this.connectedDevice = connectedDeviceInfo.username;
-			this.connectedDeviceIp = connectedDeviceInfo.clientIp;
-		});
-
-		socket.on("saved-clipboard-content", (socket) => {
-			this.devicesClipboard[socket.owner] = {
-				authorizedDevice: socket.device,
-				clipboardContent: socket.content,
-			};
-
-			if (this.connectedDevice == socket.device) {
+		// show recieved texts to the receiver
+		showReceivedTexts(socket) {
+			if (this.activeDevice == socket.receiver) {
 				const el = document.getElementById("clipboard-content");
 				el.value = socket.content;
 
 				this.copiedContent = socket.content;
 			}
+		},
+
+		updateactiveDevicesList(devices) {
+			this.activeDevices = devices;
+		},
+	},
+
+	mounted() {
+		// update device list when a new device is connected
+		socket.on("updated-devices-list", (socket) => {
+			console.log("Device connected successfully");
+			this.updateactiveDevicesList(socket.activeDevices);
 		});
 
-		socket.on("removed-device", (socket) => {
-			console.log("Device disconnected");
-			this.updateConnectedDevicesList(socket.devices);
+		// store connected device username and ip address
+		socket.on("connected", (socket) => {
+			const activeDeviceInfo = this.activeDevices.filter(
+				(device) => device.id === socket.id
+			)[0];
+
+			this.activeDevice = activeDeviceInfo.username;
+			this.activeDeviceIp = activeDeviceInfo.clientIp;
+		});
+
+		// save device clipboard information whenever it's updated
+		socket.on("sent-clipboard-content", (socket) => {
+			this.devicesClipboard[socket.sender] = {
+				authorizedDevice: socket.receiver,
+				clipboardContent: socket.content,
+			};
+
+			this.showReceivedTexts(socket);
+		});
+
+		// handles device disconnection event
+		socket.on("disconnected-device", (socket) => {
+			this.updateactiveDevicesList(socket.devices);
 		});
 	},
 };

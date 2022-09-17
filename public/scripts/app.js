@@ -23,7 +23,7 @@ const App = {
 					this.sendPastedTextsToServer(receiver, text);
 				});
 			} else {
-				const textToSend = document.getElementById("content-to-copy");
+				const textToSend = document.getElementById("text-to-send");
 
 				if (textToSend.value !== "") {
 					this.sendPastedTextsToServer(receiver, textToSend.value);

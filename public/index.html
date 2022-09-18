@@ -57,7 +57,7 @@
 				<li class="nav-item">
 					<a
 						class="nav-link"
-						href="https://twitter.com/intent/tweet?text=Love%20CopyText%20App%20by%20@thatshycoder%0A&url=https://copytext.net&hashtags=CopyText"
+						href="https://twitter.com/intent/tweet?text=Check%20out%20CopyText%20by%20@thatshycoder%0A&url=https://copytext.net&hashtags=CopyText"
 						target="_blank"
 					>
 						<img
@@ -114,23 +114,23 @@
 								:key="key"
 							>
 								<div class="deviceInfo mt-4">
-									<div class="device-icon">
+									<div v-if="device.userAgent !==''" class="device-icon">
 										<img
-											v-if="device.platform.device.type == 'desktop'"
+											v-if="device.userAgent.device.type == 'desktop'"
 											src="./assets/images/laptop.png"
 											alt="copytext-laptop-icon"
 											width="120"
 											@click="handlePasteBtn(device.username)"
 										/>
 										<img
-											v-else-if="device.platform.device.type == 'mobile'"
+											v-else-if="device.userAgent.device.type == 'smartphone' || device.userAgent.device.type == 'mobile'"
 											src="./assets/images/mobile.png"
 											alt="copytext-mobile-icon"
 											width="120"
 											@click="handlePasteBtn(device.username)"
 										/>
 										<img
-											v-else-if="device.platform.device.type == 'tablet'"
+											v-else-if="device.userAgent.device.type == 'tablet'"
 											src="./assets/images/tablet.png"
 											alt="copytext-tablet-icon"
 											width="120"
@@ -144,7 +144,20 @@
 											@click="handlePasteBtn(device.username)"
 										/>
 									</div>
+									<div v-else class="device-icon">
+										<img
+											src="./assets/images/user.png"
+											alt="copytext-user-icon"
+											width="120"
+											@click="handlePasteBtn(device.username)"
+										/>
+									</div>
 									<h5 class="mt-2">{{ device.username }}</h5>
+									<span
+										v-if="device.userAgent !== '' && device.userAgent.client !== ''"
+										class="mt-2"
+										>{{ device.userAgent.client.name }}</span
+									>
 								</div>
 								<button
 									id="pasteBtn"

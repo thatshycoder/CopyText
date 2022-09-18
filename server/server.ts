@@ -3,7 +3,6 @@ import { Server as SocketIOServer, Socket } from "socket.io";
 import { createServer, Server as HTTPServer } from "http";
 import path from "path";
 import { generateUsername } from "unique-username-generator";
-import { Navigator } from "node-navigator";
 import DeviceDetector from "device-detector-js";
 import { ActiveDevices } from "./iserver";
 
@@ -13,14 +12,12 @@ export default class CopyTextServer {
 	private io: SocketIOServer;
 	private activeDevices: ActiveDevices[] = [];
 	private readonly DEFAULT_PORT = process.env.PORT || 8080;
-	private navigator: Navigator;
 	private deviceDetector: DeviceDetector;
 
 	constructor() {
 		this.app = express();
 		this.httpServer = createServer(this.app);
 		this.io = new SocketIOServer(this.httpServer);
-		this.navigator = new Navigator();
 		this.deviceDetector = new DeviceDetector();
 
 		this.configureApp();
@@ -96,7 +93,9 @@ export default class CopyTextServer {
 			const newlyConnectedDevice = {
 				id: socket.id,
 				username: deviceUsername,
-				platform: this.deviceDetector.parse(this.navigator.userAgent),
+				userAgent: this.deviceDetector.parse(
+					socket.request.headers["user-agent"] || ""
+				),
 				clientIp: clientIpAddress,
 			};
 

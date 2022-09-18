@@ -13,6 +13,10 @@ instantly Copy/Paste texts across multiples devices nearby.
 - [NodeJS](https://nodejs.org/en/) / [Express](https://expressjs.com/) backend.
 - [Progressive Web App](https://wikipedia.org/wiki/Progressive_Web_App)
 
+## How To Use
+
+[See guide here](https://github.com/thatshycoder/CopyText/blob/master/guide.md)
+
 ## Support CopyText
 
 CopyText is completely free. However, if you would like to donate to the continuous development/improvements, please send **Ethereum** to the following address: **0xD96dfF86f659C808b675faF05a22741A67Ffd993**.

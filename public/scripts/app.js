@@ -5,7 +5,6 @@ const App = {
 	el: "#app",
 
 	data: {
-		// show dynamic icons for different devices
 		activeDevice: "",
 		activeDeviceIp: "",
 		activeDevices: [],

@@ -9,8 +9,8 @@ instantly Copy/Paste texts across multiples devices nearby.
 
 - Vanilla HTML5 / ES6 / CSS3 & [Vue](https://vuejs.org/) frontend.
 - [TypeScript](https://www.typescriptlang.org/)
-- [WebRTC](http://webrtc.org/) / (Socket.io)[https://socket.io]
-- [NodeJS](https://nodejs.org/en/) backend.
+- [WebRTC](http://webrtc.org/) / [Socket.io](https://socket.io)
+- [NodeJS](https://nodejs.org/en/) / [Express](https://expressjs.com/) backend.
 - [Progressive Web App](https://wikipedia.org/wiki/Progressive_Web_App)
 
 ## Support CopyText

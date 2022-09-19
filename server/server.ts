@@ -80,8 +80,8 @@ export default class CopyTextServer {
 	private handleDeviceConnection(socket: Socket): void {
 		const deviceUsername = generateUsername("", 0, 4);
 		const clientIpAddress =
-			socket.request.headers["x-forwarded-for"] ||
 			socket.request.socket.remoteAddress ||
+			socket.request.headers["x-forwarded-for"] ||
 			null;
 
 		const existingDevice = this.activeDevices.find(

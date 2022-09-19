@@ -128,6 +128,27 @@ export default class CopyTextServer {
 	 */
 	private configureApp(): void {
 		this.app.use(express.static(path.join(__dirname, "../public")));
+		this.handleInvalidPageRequest();
+	}
+
+	/**
+	 * Send 404 when an invalid page is requested
+	 */
+	private handleInvalidPageRequest(): void {
+		this.app.use((req, res, next) => {
+			res.status(404);
+
+			if (req.accepts("html")) {
+				res.send("404 Page Not Found");
+				return;
+			}
+
+			if (req.accepts("json")) {
+				res.json({ error: "Not found" });
+			}
+
+			res.type("txt").send("Not found");
+		});
 	}
 
 	public listen(callback: (port: string | number) => void): void {

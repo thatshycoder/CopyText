@@ -19,7 +19,7 @@ instantly Copy/Paste texts across multiples devices nearby.
 
 ## Support CopyText
 
-CopyText is completely free. However, if you would like to donate to the continuous development/improvements, please send **Ethereum** to the following address: **0xD96dfF86f659C808b675faF05a22741A67Ffd993**.
+CopyText is completely free. However, if you would like to donate to the continuous development/improvements, please send **Ethereum(BEP20)** to the following address: **0x919a93452ddf43727c1fbf4c8ea3537389300926**.
 
 
 Thank you so much for your support!
